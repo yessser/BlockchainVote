@@ -2,6 +2,7 @@ import React from 'react'
 import { DrizzleContext  } from "@drizzle/react-plugin";
 import ReadString from "./ReadString";
 import SetString from "./SetString";
+import Owner from './Owner';
 const App = props => (
   <DrizzleContext.Consumer>
     {drizzleContext => {
@@ -12,7 +13,11 @@ const App = props => (
       }
 
       return (
-        <ReadString drizzle={drizzle} drizzleState={drizzleState} />
+        <div>
+        <Owner/>
+        <ReadString drizzle={drizzle} drizzleState={drizzleState} />  
+        </div>
+        
       );
     }}
   </DrizzleContext.Consumer>

@@ -66,6 +66,7 @@ contract BallotBox {
     function getInfo()view public returns(bytes memory g ,bytes memory p,bytes memory x, bytes memory y){
         return(generator,prime,privateKey,publicKey);
     }
+    
     function addVoterToVoterList(address voter) external onlyOwner {
         require(votersList[voter]==false,"voter already added");
         require(!registryPeriodEnd,"registry period already ended");
