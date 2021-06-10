@@ -3,7 +3,9 @@ pragma solidity >=0.5.0 <0.8.0;
 contract BallotBox {
      struct ballot {
         address voter;
-        string Data;  
+        string A;
+        string B;  
+        string decrypt;
     }
     address public currentOwner;
     function isOwner() public view returns (bool) {
@@ -25,12 +27,12 @@ contract BallotBox {
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event encryptionSet(bytes g,bytes p,bytes x,bytes y);
     event AllowedVoterAdded(address voter);
-    event BallotAdded(address voter,string data);
+    event BallotAdded(address voter,string A,string B);
 
     mapping(address=>bool) public votersList;
     mapping(address=>bool) public alreadyVoted;
     bytes public publicKey;
-    bytes public privateKey;
+    bytes public privateKey="0";
     bytes public generator;
     bytes public prime;
     
@@ -51,10 +53,10 @@ contract BallotBox {
         prime=_prime;
         
     }
-    function getBallotByIndex(uint index) view public returns(string memory,address)  {
+    function getBallotByIndex(uint index) view public returns(string memory,string memory,address)  {
         require(index<ballotList.length,"Must pass valid index!");
         ballot memory b = ballotList[index];
-        return(b.Data,b.voter);
+        return(b.A,b.B,b.voter);
     }
     function setInfo( bytes calldata  g,bytes calldata  p,bytes calldata  x,bytes calldata  y) external onlyOwner {
         generator=g;
@@ -76,14 +78,14 @@ contract BallotBox {
         emit AllowedVoterAdded(voter);
     }
 
-    function vote(string memory _data) public {
+    function vote(string memory _A,string memory _B) public {
         require(votersList[msg.sender],"youre not a valid voter");
         require(!alreadyVoted[msg.sender],"you already voted");
         require(!votePeriodEnd,"voting period already ended");
         alreadyVoted[msg.sender]=true;
-        ballot memory balot=ballot(msg.sender,_data);
+        ballot memory balot=ballot(msg.sender,_A,_B,"");
         ballotList.push(balot);
-        emit BallotAdded(msg.sender,_data);
+        emit BallotAdded(msg.sender,_A,_B);
 
     }
    
