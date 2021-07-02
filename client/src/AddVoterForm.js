@@ -2,9 +2,11 @@ import React,{} from 'react'
 import {useForm} from 'react-hook-form';
 
 import HDprovider from "@truffle/hdwallet-provider";
+import { drizzleReducers } from '@drizzle/store';
 const bip39 = require("bip39")
 const Web3 = require("web3")
 const AddVoterForm = props => {
+    const drizzleState =props.drizzleState; 
     const wallet = props.wallet;
     const setWallet = props.setWallet;
     const menomic = props.menomic
@@ -27,13 +29,14 @@ const AddVoterForm = props => {
             providerOrUrl: "http://localhost:7545"
             
         })
-        setWallet(pro);
+
+        setWallet(new Web3(pro));
         const web3 = new Web3(pro);
         console.log(web3);    
-        
     }
-    const addMe = ()=>{
-        const address = wallet.getAddress(0)
+    const addMe =async ()=>{
+        await generate()
+        const address = wallet.currentProvider.getAddress(0)
         console.log(address);
         fetch("http://localhost:3010/register",{
             method:'POST',
@@ -50,11 +53,17 @@ const AddVoterForm = props => {
     }
     return (
     <div>
-    <button onClick={generate}> generate </button>
-    please save  the menomic for later use <br/>
+    <button onClick={generate}> generation de compte </button>
     {menomic}
-    <br/>
-    <button onClick={addMe}>ask to be added to the voter list</button>
+    <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register("ID", { required: true })} />
+        
+        {errors.ID && alert("field is required")}
+        {errors.ID && errors.ID.type === "required" && <span>This is required</span>}
+        
+        <input type="submit" />
+        </form>
+    <button onClick={addMe}>verification  et ajout a liste des votants</button>
         
     </div>
     )

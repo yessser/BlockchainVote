@@ -3,8 +3,11 @@ import {useForm} from 'react-hook-form';
 
 import {newContextComponents} from "@drizzle/react-components";
 import AddVoterForm from "./AddVoterForm";
+import ChoiceForm from "./ChoiceForm";
+
 import ElGamal from "elgamal";
 import {BigInteger} from 'jsbn';
+const BallotBoxx = require("./contracts/BallotBox.json")
 
 
 const {AccountData, ContractData, ContractForm}=newContextComponents;
@@ -22,25 +25,15 @@ const User = props => {
   const [menomic, setMenomic] = useState("")
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const onSubmit = async data => {
-    const contract = drizzle.contracts.BallotBox;
-    console.log(data);
-    let resu = await Gen.encryptAsync(data.candidat);
-    contract.methods.vote.cacheSend(resu.a.toString(),resu.b.toString(),{from:accounts[1], gas:1000000})
-  }
-  
-  const testEncryption = async ()=>{
-    const secret="secretsdasdsada vote"
-    
-    var resu = await Gen.encryptAsync(secret);
-    const decryp = await Gen.decryptAsync(resu)
-    console.log(secret);
+    const networkId = await wallet.eth.net.getId();
+    const contract = new wallet.eth.Contract(
+      BallotBoxx.abi,
+      BallotBoxx.networks[networkId].address
+    );
+    console.log(Gen);
+    let resu = await Gen.encryptAsync(data);
     console.log(resu);
-    console.log(resu.a.toString())
-    console.log(resu.a.toByteArray());
-    console.log(resu.b.toByteArray());
-
-    console.log(decryp.toString())
-
+    contract.methods.vote(resu.a.toString(),resu.b.toString()).send({from:wallet.currentProvider.getAddress(0), gas:1000000})
   }
   
   const parsefetch = (value)=>{
@@ -83,24 +76,14 @@ const User = props => {
   return (
     <div>  
     
-     <div>
-       request verification from server (WIP){/* cant make post request work for no */} 
-      <AddVoterForm wallet={wallet} setWallet={setWallet} menomic={menomic} setMenomic={setMenomic}/>
+     <div >
+      <AddVoterForm drizzleState={drizzleState} wallet={wallet} setWallet={setWallet} menomic={menomic} setMenomic={setMenomic}/>
      </div>
-     
-      <div>
-        <button onClick={()=>testEncryption()}>test elgamal</button>  
+     <ChoiceForm onSubmit={onSubmit}/>
+      <div> 
         <br/>
-        Vote form with account 1
-        
-        <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("candidat", { required: true })} />
-        
-        {errors.exampleRequired && <span>This field is required</span>}
-        
-        <input type="submit" />
-        </form>
-        
+        {
+        /**/}
       </div>
     
     </div>

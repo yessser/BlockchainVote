@@ -17,6 +17,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hook-form": "^7.8.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.0.1",
     "react-test-renderer": "^16.8.6",
     "scrypt": "github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb",

@@ -5,7 +5,7 @@ contract BallotBox {
         address voter;
         string A;
         string B;  
-        string decrypt;
+        string decryptValue;
     }
     address public currentOwner;
     function isOwner() public view returns (bool) {
@@ -28,6 +28,7 @@ contract BallotBox {
     event encryptionSet(bytes g,bytes p,bytes x,bytes y);
     event AllowedVoterAdded(address voter);
     event BallotAdded(address voter,string A,string B);
+    event valueDecrypted(uint index,string value );
 
     mapping(address=>bool) public votersList;
     mapping(address=>bool) public alreadyVoted;
@@ -36,10 +37,16 @@ contract BallotBox {
     bytes public generator;
     bytes public prime;
     
-    int smthn;
+    int public ballotCount=0;
     bool registryPeriodEnd;
     bool votePeriodEnd;
-    
+
+    function toggleRegisteryEnd() external onlyOwner {
+        registryPeriodEnd=!registryPeriodEnd;
+    }
+    function toggleVoteEnd() external onlyOwner {
+        votePeriodEnd=!votePeriodEnd;
+    }
     constructor (bytes memory _publicKey,bytes memory _generator,bytes memory _prime) public {
         require(
             _publicKey.length != 0,
@@ -53,7 +60,7 @@ contract BallotBox {
         prime=_prime;
         
     }
-    function getBallotByIndex(uint index) view public returns(string memory,string memory,address)  {
+    function getBallotByIndex(uint index) view public returns(string memory A,string memory B,address voter)  {
         require(index<ballotList.length,"Must pass valid index!");
         ballot memory b = ballotList[index];
         return(b.A,b.B,b.voter);
@@ -73,7 +80,6 @@ contract BallotBox {
         require(votersList[voter]==false,"voter already added");
         require(!registryPeriodEnd,"registry period already ended");
         votersList[voter]=true;
-        smthn=smthn+1;
         alreadyVoted[voter]=false;
         emit AllowedVoterAdded(voter);
     }
@@ -85,8 +91,12 @@ contract BallotBox {
         alreadyVoted[msg.sender]=true;
         ballot memory balot=ballot(msg.sender,_A,_B,"");
         ballotList.push(balot);
+        ballotCount++;
         emit BallotAdded(msg.sender,_A,_B);
 
     }
-   
+    function Decrypt(uint _index,string calldata _value) external onlyOwner {
+        ballotList[_index].decryptValue=_value;
+        emit valueDecrypted(_index,_value);
+    }
 }
