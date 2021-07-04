@@ -31,7 +31,7 @@ const run = async ()=>{
     await faceapi.nets.faceLandmark68Net.loadFromDisk('./weights')
     console.log("intialized the net");
 
-    //generate descriptor
+    //generate descriptorasdas
     const results = await faceapi
     .detectSingleFace(referenceImage)
     .withFaceLandmarks()

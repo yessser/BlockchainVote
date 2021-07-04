@@ -4,6 +4,7 @@ import {useForm} from 'react-hook-form';
 import {newContextComponents} from "@drizzle/react-components";
 import AddVoterForm from "./AddVoterForm";
 import ChoiceForm from "./ChoiceForm";
+import Home from './components/Home/Home'
 
 import ElGamal from "elgamal";
 import {BigInteger} from 'jsbn';
@@ -85,7 +86,7 @@ const User = props => {
         {
         /**/}
       </div>
-    
+      
     </div>
     
   )

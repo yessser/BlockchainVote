@@ -1,13 +1,35 @@
-import * as canvas from 'canvas';
-
-import * as faceapi from 'face-api.js';
-
+const canvas = require("canvas")
+const faceapi = require("face-api.js")
+require('@tensorflow/tfjs-node');
 // patch nodejs environment, we need to provide an implementation of
 // HTMLCanvasElement and HTMLImageElement
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 
+
 const express = require('express')
+var multer = require('multer');
+//multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './images')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now()+file.originalname)
+  }
+});
+const fileFilter=(req, file, cb)=>{
+ if(file.mimetype ==='image/jpeg' || file.mimetype ==='image/jpg' || file.mimetype ==='image/png'){
+     cb(null,true);
+ }else{
+     cb(null, false);
+ }
+
+} 
+var upload = multer({ 
+  storage:storage
+  //fileFilter:fileFilter
+});
 var cors = require('cors')
 const app = express()
 const port = 3010
@@ -57,28 +79,19 @@ const init3 = async () => {
 init3()
 // request that handles the voter registration
 //TODO  ADD SENDING PICTURE AND FACE RECOGNITION
-app.post("/register",async (req,res)=>{
-  console.log(req.body);
+const addvoter = async (address)=>{
   const contract = new web3.eth.Contract(
     BallotBox.abi,
     BallotBox.networks[networkId].address
   );
   try{
-    const added = await contract.methods.addVoterToVoterList(req.body.data).send({from:publicKey})
-    await web3.eth.sendTransaction({from:publicKey, to:req.body.data, value: web3.utils.toWei("0.5", "ether")})
-    res.json(
-      {
-        result:"voter Added !"
-      })
+    const added = await contract.methods.addVoterToVoterList(address).send({from:publicKey})
+    await web3.eth.sendTransaction({from:publicKey, to:address, value: web3.utils.toWei("0.5", "ether")})
   }catch(e){
-    
-    console.log(e);
-    res.json({
-      result:"problem happened!"
-    })
+    console.log("voter already added");
   }
   
-})
+}
 app.post("/startDecrypt", async (req,res)=>{
   //partie broadcast cle privee
   Gen=req.body.data
@@ -150,3 +163,71 @@ const ByteArrayToUint= (array)=>{
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+app.use(express.static(__dirname + '/public'));
+app.use('/uploads', express.static('uploads'));
+const YESSER = "./images/100001308028260002.jpg"
+const ROCK = "./images/theRock.jpg"
+app.post("/uploadForm",upload.single("myImg"),async (req,res,next)=>
+{
+  console.log(req.body.ID);
+  var imgLink = "./images/"+req.body.ID+".jpg"
+  try{
+    var ref = await canvas.loadImage(imgLink)
+  }
+  catch(err){
+    res.json({message:"Id introuvable"})
+    return;
+  }
+  const img = await canvas.loadImage(req.body.myImg)
+  if(!img){
+    res.json({message:"fichier recue invalide"})
+    return;
+  }
+  console.log("imgs loaded");
+  const imgFace = await faceapi
+    .detectSingleFace(img)
+    .withFaceLandmarks()
+    .withFaceDescriptor()
+    if (!imgFace) {
+      res.status(200).json({message:"no Face"})
+      return;
+    }else{
+      console.log("face found ");
+      const refImg = await faceapi
+        .detectSingleFace(ref)
+        .withFaceLandmarks()
+        .withFaceDescriptor()
+      const faceMatcher = new faceapi.FaceMatcher(refImg)
+      const bestMatch = faceMatcher.findBestMatch(imgFace.descriptor)
+      if(bestMatch._label=="person 1"){
+        addvoter(req.body.address)
+        res.json({message:"valid"})
+      }else{
+          res.json({message:"inconnu"})
+      }
+    }
+  /*  
+  if(req.file)
+  {const pathName=req.file.path;
+    console.log(pathName)
+      try{    
+        res.status(200).json({message:"Saved successfully"})
+          
+      }catch(err){
+        res.status(400).json({message:'User could not be saved'})
+      }
+    
+  }
+  else{
+    res.status(400).json({message:'User Image does not exists'})
+  }*/
+});
+
+const initAi = async ()=>{
+  await faceapi.nets.faceRecognitionNet.loadFromDisk('./weights')
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk('./weights')
+  await faceapi.nets.faceLandmark68Net.loadFromDisk('./weights')
+    console.log("intialized the net");
+}
+
+initAi()
