@@ -37,10 +37,15 @@ contract BallotBox {
     bytes public generator;
     bytes public prime;
     
+    int public MaxBallot;
     int public ballotCount=0;
-    bool registryPeriodEnd;
-    bool votePeriodEnd;
+    bool public registryPeriodEnd;
+    bool public votePeriodEnd;
+    bool public decryptEnd=false;
 
+    function setDecryptEnd() external onlyOwner {
+        decryptEnd=true;
+    }
     function toggleRegisteryEnd() external onlyOwner {
         registryPeriodEnd=!registryPeriodEnd;
     }
@@ -60,10 +65,10 @@ contract BallotBox {
         prime=_prime;
         
     }
-    function getBallotByIndex(uint index) view public returns(string memory A,string memory B,address voter)  {
+    function getBallotByIndex(uint index) view public returns(string memory value,address voter)  {
         require(index<ballotList.length,"Must pass valid index!");
         ballot memory b = ballotList[index];
-        return(b.A,b.B,b.voter);
+        return(b.decryptValue,b.voter);
     }
     function setInfo( bytes calldata  g,bytes calldata  p,bytes calldata  x,bytes calldata  y) external onlyOwner {
         generator=g;

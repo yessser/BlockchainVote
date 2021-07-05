@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react"
 import {useForm} from 'react-hook-form';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch
+} from "react-router-dom";
+import "./index.css"
 
 import {newContextComponents} from "@drizzle/react-components";
 import AddVoterForm from "./AddVoterForm";
 import ChoiceForm from "./ChoiceForm";
 import Home from './components/Home/Home'
-
+import Resultat from "./components/Resulat";
 import ElGamal from "elgamal";
 import {BigInteger} from 'jsbn';
 const BallotBoxx = require("./contracts/BallotBox.json")
@@ -34,7 +42,9 @@ const User = props => {
     console.log(Gen);
     let resu = await Gen.encryptAsync(data);
     console.log(resu);
-    contract.methods.vote(resu.a.toString(),resu.b.toString()).send({from:wallet.currentProvider.getAddress(0), gas:1000000})
+    const tx =await contract.methods.vote(resu.a.toString(),resu.b.toString()).send({from:wallet.currentProvider.getAddress(0), gas:1000000})
+    console.log(tx);
+    alert("votre vote a bien etait envoyer")
   }
   
   const parsefetch = (value)=>{
@@ -73,22 +83,28 @@ const User = props => {
     setGenId(GenKey)
   }, [genId,BallotBox.getInfo[genId]])
   
-  
+  let { path, url } = useRouteMatch();
+
   return (
-    <div>  
-    
-     <div >
-      <AddVoterForm drizzleState={drizzleState} wallet={wallet} setWallet={setWallet} menomic={menomic} setMenomic={setMenomic}/>
-     </div>
-     <ChoiceForm onSubmit={onSubmit}/>
-      <div> 
-        <br/>
-        {
-        /**/}
-      </div>
-      
+    <div>     
+      <Switch >
+        <Route path={url+"/vote"}>
+          <AddVoterForm onSubmit={onSubmit} drizzleState={drizzleState} wallet={wallet} setWallet={setWallet} menomic={menomic} setMenomic={setMenomic}/>
+        </Route>
+        <Route path={url+"/resultat"}>
+          <Resultat url={url} drizzle={drizzle} drizzleState={drizzleState}/>
+        </Route>
+        <Route path={url}>
+        <div className="center">
+          <div className="pageList">
+            <Link className="pageElement" to={url+"/vote"}>voter</Link>
+            <br></br>
+            <Link className="pageElement" to={url+"/resultat"}>Resultat</Link>
+          </div>
+        </div>
+        </Route>
+      </Switch>
     </div>
-    
   )
   
 }

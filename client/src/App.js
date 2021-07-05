@@ -2,11 +2,13 @@ import React from 'react'
 import { DrizzleContext  } from "@drizzle/react-plugin";
 import User from "./User";
 import Owner from './Owner';
+import Resultat from './components/Resulat'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 const App = props => (
   
@@ -22,12 +24,15 @@ const App = props => (
         <div>
         <Router>
         <Switch>
+          <Redirect exact from="/" to="/user" />
           <Route path="/admin">
             <Owner drizzle={drizzle} drizzleState={drizzleState}/>  
           </Route>
-          <Route path="/">
+          
+          <Route path="/user">
             <User drizzle={drizzle} drizzleState={drizzleState} />
           </Route>
+          
         </Switch>
         {/*<Owner drizzle={drizzle} drizzleState={drizzleState}/>
         <br/><br/><h3>voter side</h3>

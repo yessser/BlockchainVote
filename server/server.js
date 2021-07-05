@@ -89,6 +89,7 @@ const addvoter = async (address)=>{
     await web3.eth.sendTransaction({from:publicKey, to:address, value: web3.utils.toWei("0.5", "ether")})
   }catch(e){
     console.log("voter already added");
+    console.log(e);
   }
   
 }
@@ -109,7 +110,6 @@ app.post("/startDecrypt", async (req,res)=>{
     var pArray = ByteArrayToUint(pby)
     var xArray = ByteArrayToUint(xby)
     var yArray = ByteArrayToUint(yby)
-    console.log(yArray);
     const tx = await  contract.methods.setInfo(gArray,pArray,xArray,yArray).send({from:publicKey, gas:1000000})
   
   console.log("gonna start decryption");
@@ -119,16 +119,24 @@ app.post("/startDecrypt", async (req,res)=>{
   var Gen = new ElGamal.default(parsefetch(g.p),parsefetch(g.g),parsefetch(g.y),parsefetch(g.x))
   var element
     var resu={}
-    var decrypValue
+  console.log("before loop");
   for (let i = 0; i <ballotCount; i++) {
+    console.log("looping");
     element = await contract.methods.getBallotByIndex(i).call();
+    console.log("got the element");
     resu.a=new BigInteger(element.A)
     resu.b=new BigInteger(element.B)
+    console.log("decryption");
     const decrypValue = await Gen.decryptAsync(resu)
+    console.log(i);
     console.log(decrypValue.toString());
     await contract.methods.Decrypt(i,decrypValue.toString()).send({from:publicKey,gas:1000000})
   }
-
+  try{
+    await contract.methods.setDecryptEnd().send({from:publicKey, gas:1000000})
+  }catch(e){
+    console.log(e);
+  }
   res.json({
     result:ballotCount
   })
@@ -200,10 +208,12 @@ app.post("/uploadForm",upload.single("myImg"),async (req,res,next)=>
       const faceMatcher = new faceapi.FaceMatcher(refImg)
       const bestMatch = faceMatcher.findBestMatch(imgFace.descriptor)
       if(bestMatch._label=="person 1"){
+        console.log("valid");
         addvoter(req.body.address)
         res.json({message:"valid"})
       }else{
-          res.json({message:"inconnu"})
+        console.log("unkown");
+        res.json({message:"inconnu"})
       }
     }
   /*  

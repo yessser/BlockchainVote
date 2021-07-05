@@ -1,4 +1,3 @@
-
 .elementCandidat{
   color: black;
   text-align: center;
@@ -23,5 +22,44 @@
   text-align: center;
   margin: auto;
   width: 50%;
+  padding: 10px;
+}
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.pageElement{
+  color: black;
+  text-align: center;
+  padding: 10px;
+  border: 3px solid rgb(5, 139, 228);
+  background-color: rgb(216, 233, 245);
+  border-radius: 15px;
+  margin-bottom: 10px;
+  transition: background-color 1s;
+}
+.PageElement:hover{
+  background-color: rgb(64, 162, 228);
+}
+.pageList{
+  margin: auto;
+  width: 50%;
+  border: 3px solid white;
+  border-radius: 5px;
   padding: 10px;
 }

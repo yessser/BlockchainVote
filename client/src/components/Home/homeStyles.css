@@ -87,6 +87,7 @@
     .home-container form button {
     -webkit-appearance: none;
     -moz-appearance: none;
+    margin-bottom: 20px;
     appearance: none;
     outline: 0;
     background-color: #0e6e02;
