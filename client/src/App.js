@@ -21,25 +21,23 @@ const App = props => (
       }
 
       return (
-        <div>
         <Router>
-        <Switch>
-          <Redirect exact from="/" to="/user" />
-          <Route path="/admin">
-            <Owner drizzle={drizzle} drizzleState={drizzleState}/>  
-          </Route>
-          
-          <Route path="/user">
-            <User drizzle={drizzle} drizzleState={drizzleState} />
-          </Route>
-          
-        </Switch>
-        {/*<Owner drizzle={drizzle} drizzleState={drizzleState}/>
-        <br/><br/><h3>voter side</h3>
-        <User drizzle={drizzle} drizzleState={drizzleState} />*/
-        }
+          <Switch>
+            <Redirect exact from="/" to="/user" />
+            <Route path="/admin">
+              <Owner drizzle={drizzle} drizzleState={drizzleState}/>  
+            </Route>
+            
+            <Route path="/user">
+              <User drizzle={drizzle} drizzleState={drizzleState} />
+            </Route>
+            
+          </Switch>
+          {/*<Owner drizzle={drizzle} drizzleState={drizzleState}/>
+          <br/><br/><h3>voter side</h3>
+          <User drizzle={drizzle} drizzleState={drizzleState} />*/
+          }
         </Router>
-        </div>
         
       );
     }}

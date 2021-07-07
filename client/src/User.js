@@ -86,25 +86,20 @@ const User = props => {
   let { path, url } = useRouteMatch();
 
   return (
-    <div>     
-      <Switch >
-        <Route path={url+"/vote"}>
-          <AddVoterForm onSubmit={onSubmit} drizzleState={drizzleState} wallet={wallet} setWallet={setWallet} menomic={menomic} setMenomic={setMenomic}/>
-        </Route>
-        <Route path={url+"/resultat"}>
-          <Resultat url={url} drizzle={drizzle} drizzleState={drizzleState}/>
-        </Route>
-        <Route path={url}>
-        <div className="center">
-          <div className="pageList">
-            <Link className="pageElement" to={url+"/vote"}>voter</Link>
-            <br></br>
-            <Link className="pageElement" to={url+"/resultat"}>Resultat</Link>
-          </div>
+    <Switch >
+      <Route path={url+"/vote"}>
+        <AddVoterForm onSubmit={onSubmit} drizzleState={drizzleState} wallet={wallet} setWallet={setWallet} menomic={menomic} setMenomic={setMenomic}/>
+      </Route>
+      <Route path={url+"/resultat"}>
+        <Resultat url={url} drizzle={drizzle} drizzleState={drizzleState}/>
+      </Route>
+      <Route path={url}>
+      <div className="pageList">
+          <Link className="pageElement" to={url+"/vote"}><h1>voter</h1></Link>
+          <Link className="pageElement" to={url+"/resultat"}><h1>Resultat</h1></Link>
         </div>
-        </Route>
-      </Switch>
-    </div>
+      </Route>
+    </Switch>
   )
   
 }

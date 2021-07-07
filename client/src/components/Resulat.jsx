@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useMemo} from 'react';
+import React, {Fragment, useState, useEffect ,useMemo} from 'react';
 import { Chart } from 'react-charts'
 import { Link } from 'react-router-dom';
 const Resultat = (props) => {
@@ -20,39 +20,48 @@ const Resultat = (props) => {
       setCount(key)
     }, [countKey])
 
-    const [x, setX] = useState([]) 
+    const [x, setX] = useState({})
+    
     useEffect( ()=>{
       const contract = drizzle.contracts.BallotBox;
-      if(count){
+      if(count && s){
         const c = count.value
         var array = {} 
-        var array2 = {}
-        console.log(c);
         const iter = async (i)=>{
           const element = await  contract.methods.getBallotByIndex(i).call()
-          console.log(element.value)
           const x = array[element.value]
+          console.log(x);
           if(x){
-            array2.x=array2.x+1;
+            array[element.value]=array[element.value]+1;
           }else{
             console.log("here");
-            array[element.value]=element.value;
-            array2[element.value]=1;
+            array[element.value]=1;
           }
         }
-
-        for (let i = 0; i < c; i++) {
-          iter(i)
+        const all = async ()=>{
+          for (let i = 0; i < c; i++) {
+            await iter(i)
+          }
+          await setX(array)
         }
-        console.log(array)
-        console.log(array2)
-        //setX(array);
+        
+        all()
+        
       }
 
     },[BallotBox.ballotCount[countKey]])
 
-    const Resultat = () =>{   
-      
+    const Resultat = () =>{
+      var d=[];
+      console.log(x)
+      //d.push({label:"0",data:[[0,0]]})
+      for (var key of Object.keys(x)) {
+        console.log(key)
+        d.push({label:key,data:[[key,x[key]]]})
+      }
+      //d.push({label:null,data:[[0,0]]})
+      console.log(d);
+      //return(d)
         return([
           {
             label: 'Series 1',
@@ -64,12 +73,21 @@ const Resultat = (props) => {
               [4, 7],
             ],
           },
+          {
+            label: 'Series 1',
+            data: [
+              ["bla", 1],
+              [1, 2],
+              [2, 4],
+              [3, 2],
+              [4, 7],
+            ],
+          }
         ]
         )
     }
     const data = useMemo(
-         Resultat,
-        [x]
+         Resultat,[x]
       )
     const series = useMemo(
         () => ({
@@ -79,33 +97,38 @@ const Resultat = (props) => {
       )
       const axes = useMemo(
         () => [
-          { primary: true, type: 'ordinal', position: 'left' },
-          { position: 'bottom', type: 'linear', stacked: true }
+          { primary: true, type: 'ordinal', position: 'bottom' },
+          { position: 'left', type: 'linear', stacked: false }
         ],
         []
       )
     
 
     if(s&&s.value){
-        return(
-            <div style={{
-                width: `500px`,
-                height: `300px`,   
-              }}>
-                qqchose{console.log(s)}
-                <Chart data={data} series={series} axes={axes} tooltip />
+        
+      return(
+        <Fragment>
+            <div className="topnav">
+                <Link to={url+"/vote"}>voter</Link>
+                <Link to={url+"/resultat"}>Resultat</Link>
             </div>
+            <div className="chart-container" >
+                <div className="chart">
+                  <Chart data={data} series={series} axes={axes} tooltip />
+                </div>
+            </div>
+        </Fragment>
         )
     }
     else{
       
         return (
-          <div>
+          <div >
             <div className="topnav">
               <Link to={url+"/vote"}>voter</Link>
               <Link to={url+"/resultat"}>Resultat</Link>
             </div>
-                le vote n'as pas encore etait decryptee
+                
           </div>
         )
     }

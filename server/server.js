@@ -67,8 +67,8 @@ const parsefetch = (value)=>{
 const Provider = require("@truffle/hdwallet-provider");
 const Web3 = require('web3');
 const BallotBox = require("./../client/src/contracts/BallotBox.json")
-const privateKey = "be87de7bce2ba50fdc76f8bfc549a284d327868815c8e805d456c63174aaf0c1";
-const publicKey = "0x9a417d542C86fDF18a3BaA00f192c59D5Fd97434";
+const privateKey = "247841a63cc61827b4a7459af8057bdbb0a3b959fd48e24d538c6cb06fadb343";
+const publicKey = "0x52416581dA37DB64F36614E3Ce7f89f5250d42b1";
 let web3 = null;
 var networkID= null;
 const init3 = async () => {
@@ -96,7 +96,8 @@ const addvoter = async (address)=>{
 app.post("/startDecrypt", async (req,res)=>{
   //partie broadcast cle privee
   Gen=req.body.data
-  console.log("started");
+  console.log("received data");
+  console.log(Gen);
   const contract = new web3.eth.Contract(
     BallotBox.abi,
     BallotBox.networks[networkId].address
@@ -116,19 +117,15 @@ app.post("/startDecrypt", async (req,res)=>{
   //partie decryption
   const ballotCount = await contract.methods.ballotCount().call()
   const g = await contract.methods.getInfo().call() 
-  var Gen = new ElGamal.default(parsefetch(g.p),parsefetch(g.g),parsefetch(g.y),parsefetch(g.x))
+
+  var Gen1 = new ElGamal.default(parsefetch(g.p),parsefetch(g.g),parsefetch(g.y),parsefetch(g.x))
   var element
-    var resu={}
-  console.log("before loop");
+  var resu={}
   for (let i = 0; i <ballotCount; i++) {
-    console.log("looping");
     element = await contract.methods.getBallotByIndex(i).call();
-    console.log("got the element");
     resu.a=new BigInteger(element.A)
     resu.b=new BigInteger(element.B)
-    console.log("decryption");
-    const decrypValue = await Gen.decryptAsync(resu)
-    console.log(i);
+    const decrypValue = await Gen1.decryptAsync(resu)
     console.log(decrypValue.toString());
     await contract.methods.Decrypt(i,decrypValue.toString()).send({from:publicKey,gas:1000000})
   }

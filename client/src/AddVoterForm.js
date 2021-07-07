@@ -47,22 +47,18 @@ const AddVoterForm = props => {
         console.log(web3);    
     }
     return (
-    <div> 
-    {menomic}
     <Switch>
-        <Route path={url}>
-            <Home onSubmit={onSubmit} wallet={wallet} generate={generate}/>
-        </Route>
-        <Route path={"resultat"}>
-        <div className="topnav">
-            <Link to={url}>voter</Link>
-            <Link to={"resultat"}>Resultat</Link>
-        </div>
-            <Resultat/>
-        </Route>
-    </Switch>
-    
+    <Route path={url}>
+        <Home onSubmit={onSubmit} wallet={wallet} generate={generate}/>
+    </Route>
+    <Route path={"resultat"}>
+    <div className="topnav">
+        <Link to={url}>voter</Link>
+        <Link to={"resultat"}>Resultat</Link>
     </div>
+        <Resultat/>
+    </Route>
+    </Switch>
     )
 }
 

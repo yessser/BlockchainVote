@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef,useLayoutEffect } from 'react'
+import React, {Fragment, useState,useEffect,useRef,useLayoutEffect } from 'react'
 import './homeStyles.css'
 import { WebcamCapture} from '../Webcam/Webcam'
 import ChoiceForm from "../../ChoiceForm";
@@ -53,13 +53,12 @@ const Home = (props) => {
     }
     if(!redirect){
     return (
-      <div>
+      <div className="home-container">
         <div className="topnav">
             <Link to={url}>voter</Link>
             <Link to={"resultat"}>Resultat</Link>
         </div>
-        <div className="home-container">
-            <div className="container">
+        <div className="container">
                 <div className="text">
                   <h1>Fill up this form! 100001308028260002</h1>
                   <form className="form">
@@ -70,19 +69,18 @@ const Home = (props) => {
                   </form>
                 </div>
             </div>
-        </div>
       </div>
       )
     }
     else{
       return(
-      <div>
+      <Fragment>
         <div className="topnav">
             <Link onClick={()=>{setRedirect(false)}} to={url}>voter</Link>
             <Link to={"resultat"}>Resultat</Link>
         </div>
         <ChoiceForm set={setRedirect} onSubmit={onSubmit} wallet={wallet} />
-      </div>
+      </Fragment>
       )
     }
 }

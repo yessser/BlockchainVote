@@ -11,24 +11,22 @@
     src: url(https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
     }
     .home-container {
-    box-sizing: border-box;
-    /* background-color: rgb(250, 193, 193); */
-    background: #FBD3E9;  /* fallback for old browsers */
-    background: linear-gradient(to left, #FBD3E9, #0e6e02);
-    margin: 0;
-    min-height:80vh;
-    padding:60px 0;
-    overflow: hidden;
-    font-family: 'Source Sans Pro', sans-serif;
+        width: 100%;
+        height: 100vh;
+        min-height:80vh;
+        padding:60px 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        background: #232526;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
     }
     .home-container .container {
     max-width:60vw;
     margin: 0 auto;
     display: flex;
     padding: 0;
-    background-color: white;
-    border-left: 1px solid white;
-    border-radius: 8px 0 0 8px;
+border-radius: 8px;
     }
     .home-container .container h1 {
     font-size: 40px;
@@ -39,13 +37,14 @@
     }
     .home-container .container .text
     {
-    width: 90%;
-    padding:30px 0;
-    text-align: center;
-    margin:0 auto;
+        width: 90%;
+        text-align: center;
+        margin:0 auto;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 8px;
     }
     .home-container form {
-    padding: 20px 0;
+    /* padding: 20px 0; */
     position: relative;
     z-index: 2;
     width: 70%;
@@ -122,12 +121,12 @@
     width:38%;
     }
     /* Media queries ~ */
-    @media screen and (max-width:1000px)
+    /* @media screen and (max-width:1000px)
     {
-    .home-container .container
-    {
-    max-width:90vw;
-    }
+        .home-container .container
+        {
+            max-width:90vw;
+        }
     }
     @media screen and (max-width:678px)
     {
@@ -137,7 +136,8 @@
     }
     .home-container .container
     {
-    max-width: 80vw;
+        max-width: 80vw;
+        height: 100%;
     }
     .home-container form
     {
@@ -150,6 +150,6 @@
     .home-container .container .text
     {
     width: 100%;
-    padding: 80px 20px;
+    padding: 0 20px;
     }
-    }
+    } */

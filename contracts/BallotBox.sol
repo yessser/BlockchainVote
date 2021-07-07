@@ -65,10 +65,10 @@ contract BallotBox {
         prime=_prime;
         
     }
-    function getBallotByIndex(uint index) view public returns(string memory value,address voter)  {
+    function getBallotByIndex(uint index) view public returns(string memory A,string memory B, string memory value,address voter)  {
         require(index<ballotList.length,"Must pass valid index!");
         ballot memory b = ballotList[index];
-        return(b.decryptValue,b.voter);
+        return(b.A,b.B,b.decryptValue,b.voter);
     }
     function setInfo( bytes calldata  g,bytes calldata  p,bytes calldata  x,bytes calldata  y) external onlyOwner {
         generator=g;
