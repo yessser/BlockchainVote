@@ -52,10 +52,10 @@ const AddVoterForm = props => {
         <Home onSubmit={onSubmit} wallet={wallet} generate={generate}/>
     </Route>
     <Route path={"resultat"}>
-    <div className="topnav">
-        <Link to={url}>voter</Link>
-        <Link to={"resultat"}>Resultat</Link>
-    </div>
+        <div className="topnav">
+            <Link to={url}>voter</Link>
+            <Link to={"resultat"}>Resultat</Link>
+        </div>
         <Resultat/>
     </Route>
     </Switch>

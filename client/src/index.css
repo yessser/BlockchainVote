@@ -10,6 +10,7 @@ body{
   height: 100vh;
 }
 .elementCandidat{
+  font-size: 200%;
   color: black;
   text-align: center;
   padding: 10px;
@@ -33,6 +34,7 @@ body{
   width: 50%;
   height: 100%;
   padding: 50px;
+  flex-direction: column;
 }
 .topnav {
   position: absolute;
@@ -57,7 +59,19 @@ body{
   background-color: #ddd;
   color: black;
 }
+#resultat{
+  background-image: url("./image/Resultat.jpg");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
 
+}
+#vote{
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  background-image: url("./image/vote.jpg");
+}
 .pageElement{
   display: flex;
   flex-direction: column;
@@ -71,6 +85,9 @@ body{
   transition: background-color 1s;
   text-decoration: none;
 }
+.pageElement h1{
+  font-size: 400%;
+}
 .PageElement:hover{
   background-color: rgb(64, 162, 228);
 }
@@ -82,6 +99,7 @@ body{
   height: 100%;
 }
 .chart-container{
+  background-color: rgba(241, 245, 248);
   width: 100%;
   height: 100%;
   display: flex;
@@ -91,7 +109,6 @@ body{
 .chart{
   width:80%;
   height:60%;
-  overflow: hidden;
 }
 .wrapper{
   width: 100%;
@@ -101,4 +118,35 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: #232526;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.message{
+  color: #f2f2f2;
+  margin: auto;
+  text-align: center;
+  width: 50%;
+  height: 50vh;
+}
+.center a{
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin: auto;
+  text-decoration: none;
+  font-size: 30px;
+  background-color: #f2f2f2;
+}
+.center a{
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin: auto;
+  margin-top: 2em;
+  text-decoration: none;
+  font-size: 30px;
+  color: #f2f2f2;
+  background-color: #0e6e02;
 }

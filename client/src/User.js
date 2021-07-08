@@ -11,8 +11,6 @@ import "./index.css"
 
 import {newContextComponents} from "@drizzle/react-components";
 import AddVoterForm from "./AddVoterForm";
-import ChoiceForm from "./ChoiceForm";
-import Home from './components/Home/Home'
 import Resultat from "./components/Resulat";
 import ElGamal from "elgamal";
 import {BigInteger} from 'jsbn';
@@ -42,9 +40,14 @@ const User = props => {
     console.log(Gen);
     let resu = await Gen.encryptAsync(data);
     console.log(resu);
+    try{
     const tx =await contract.methods.vote(resu.a.toString(),resu.b.toString()).send({from:wallet.currentProvider.getAddress(0), gas:1000000})
     console.log(tx);
     alert("votre vote a bien etait envoyer")
+    }catch(e){
+        console.log(e);
+        alert("une erreur est survenue")
+    }
   }
   
   const parsefetch = (value)=>{
@@ -95,9 +98,9 @@ const User = props => {
       </Route>
       <Route path={url}>
       <div className="pageList">
-          <Link className="pageElement" to={url+"/vote"}><h1>voter</h1></Link>
-          <Link className="pageElement" to={url+"/resultat"}><h1>Resultat</h1></Link>
-        </div>
+          <Link id="vote" className="pageElement" to={url+"/vote"}><h1>voter</h1></Link>
+          <Link id="resultat" className="pageElement" to={url+"/resultat"}><h1>Resultat</h1></Link>
+      </div>
       </Route>
     </Switch>
   )

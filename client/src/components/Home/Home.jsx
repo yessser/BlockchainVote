@@ -45,8 +45,11 @@ const Home = (props) => {
         body:formData
       }).then(res=>res.json())
       .then(res=>{
-        console.log(res);
-        setRedirect(true)
+        console.log(res.message);
+        if(res.message=="valid"){setRedirect(true)}
+        else{
+          alert("veulliez verifiez vos information sont correct et votre photo visible")
+        }
         })
       .catch(err=>console.log(err));
       
@@ -60,12 +63,11 @@ const Home = (props) => {
         </div>
         <div className="container">
                 <div className="text">
-                  <h1>Fill up this form! 100001308028260002</h1>
+                  <h1>veuiller prendre une photo et remplir votre numero d'identite national</h1>
                   <form className="form">
-                    <button onClick={(e)=>{e.preventDefault(); generate()}}> generation de compte </button>
                     <WebcamCapture setImage={setMyImg} image={myImg}/>
                     <input type="text" placeholder="ID" onChange={(e) => setName(e.target.value)} />
-                    <button type="submit" id="login-button" onClick={(e) => submitForm(e)}>validation</button>
+                    <button type="submit" onClick={(e) => submitForm(e)}>validation</button>
                   </form>
                 </div>
             </div>
